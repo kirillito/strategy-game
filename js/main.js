@@ -2,9 +2,11 @@ let canvas;
 let canvasContext;
 
 const FPS = 30;
-const ENEMY_NUMBER = 5;
+const PLAYER_START_UNITS = 25;
+const ENEMY_START_UNITS = 250;
 
-let testUnit = new Unit();
+let playerUnits = [];
+let enemyUnits = [];
 
 window.onload = function() {
   canvas = document.getElementById('gameCanvas');
@@ -39,8 +41,15 @@ function calculateMousePos(e) {
 
 function handleMouseClick(e) {
   let {x, y} = calculateMousePos(e);
-  testUnit.goToX = x;
-  testUnit.goToY = y;
+  playerUnits.forEach(u => { 
+    u.goToX = x;
+    u.goToY = y;
+  });
+
+  enemyUnits.forEach(u => { 
+    u.goToX = x;
+    u.goToY = y;
+  });
 }
 
 function launchIfReady() {
@@ -55,12 +64,21 @@ function startGame() {
     draw();
   }, 1000/FPS);
 
-  testUnit.init(playerPic); 
+  for (i=0; i<PLAYER_START_UNITS; i++) {
+    let p = new Unit();
+    p.init(playerPic);
+    playerUnits.push(p);
+  }
+  for (i=0; i<ENEMY_START_UNITS; i++) {
+    let e = new Unit();
+    e.init(enemyPic);
+    enemyUnits.push(e);
+  }
 }
 
 function animate() {
-  
-  testUnit.move();
+  playerUnits.forEach(u => u.move());
+  enemyUnits.forEach(u => u.move());
 }
 
 function draw() {	
@@ -68,5 +86,6 @@ function draw() {
   drawRectangle(0,0,canvas.width,canvas.height,'black');
   //drawImageCenteredAtLocationWithRotation(bgPic, canvas.width/2, canvas.height/2, 0);
 
-  testUnit.draw();
+  playerUnits.forEach(u => u.draw());
+  enemyUnits.forEach(u => u.draw());
 }

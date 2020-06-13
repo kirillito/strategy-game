@@ -5,14 +5,16 @@ class Unit {
   constructor() {
     this.x = 0;
     this.y = 0;
+    this.angle = 0;
     this.isDead = false;
   }
 
   reset() {
     this.isDead = false;
     
-    this.x = Math.random()*canvas.width/4;
-    this.y = Math.random()*canvas.height/4;
+    this.x = Math.random()*canvas.width/2;
+    this.y = Math.random()*canvas.height/2;
+    this.angle = 0;
 
     this.goToX = this.x;
     this.goToY = this.y;
@@ -25,16 +27,29 @@ class Unit {
   }
 
   move() {
+    if (this.x === this.goToX && this.y === this.goToY) {
+      return;
+    }
+
+
     let deltaX = this.goToX - this.x;
     let deltaY = this.goToY - this.y;
-    let moveAngle = Math.atan2(deltaY, deltaX);
-    this.x += this.SPEED * Math.cos(moveAngle);
-    this.y += this.SPEED * Math.sin(moveAngle);
+    this.angle = Math.atan2(deltaY, deltaX);
+
+    let distToGo = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+
+    if (distToGo > this.SPEED) {
+      this.x += this.SPEED * Math.cos(this.angle);
+      this.y += this.SPEED * Math.sin(this.angle);
+    } else {
+      this.x = this.goToX;
+      this.y = this.goToY;
+    }
   }
 
   draw() {
     if (!this.isDead) {
-      drawImageCenteredAtLocationWithScaling(this.imgSprite, this.x, this.y, this.PLACEHOLDER_RADIUS*2, this.PLACEHOLDER_RADIUS*2);
+      drawImageCenteredAtLocationWithRotation(this.imgSprite, this.x, this.y, this.angle);
     }
   }
 }
