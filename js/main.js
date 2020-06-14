@@ -41,15 +41,9 @@ function calculateMousePos(e) {
 
 function handleMouseClick(e) {
   let {x, y} = calculateMousePos(e);
-  playerUnits.forEach(u => { 
-    u.goToX = x;
-    u.goToY = y;
-  });
+  playerUnits.forEach(u => u.goToNear(x, y));
 
-  enemyUnits.forEach(u => { 
-    u.goToX = x;
-    u.goToY = y;
-  });
+  enemyUnits.forEach(u => u.goToNear(x, y));
 }
 
 function launchIfReady() {

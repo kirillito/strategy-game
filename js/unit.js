@@ -1,6 +1,7 @@
 class Unit {
   PLACEHOLDER_RADIUS = 8;
   SPEED = 2;
+  MAX_RAND_DIST_FROM_TARGET = 150;
 
   constructor() {
     this.x = 0;
@@ -26,12 +27,16 @@ class Unit {
     this.reset();
   }
 
+  goToNear(nearX, nearY) {
+    this.goToX = nearX + Math.random()*this.MAX_RAND_DIST_FROM_TARGET;
+    this.goToY = nearY + Math.random()*this.MAX_RAND_DIST_FROM_TARGET;
+  }
+
   move() {
     if (this.x === this.goToX && this.y === this.goToY) {
       return;
     }
-
-
+    
     let deltaX = this.goToX - this.x;
     let deltaY = this.goToY - this.y;
     this.angle = Math.atan2(deltaY, deltaX);
