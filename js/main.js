@@ -8,6 +8,12 @@ const ENEMY_START_UNITS = 250;
 let playerUnits = [];
 let enemyUnits = [];
 
+let lassoX1 = 0,
+    lassoY1 = 0,
+    lassoX2 = 0,
+    lassoY2 = 0;
+let isMouseDragging = false;
+
 window.onload = function() {
   canvas = document.getElementById('gameCanvas');
   canvasContext = canvas.getContext('2d');
@@ -18,13 +24,29 @@ window.onload = function() {
   //this.initInput();
   this.loadImages();
 
-  canvas.addEventListener('mousemove', 
-    function(e) {
-      var mousePos = calculateMousePos(e);
+  canvas.addEventListener('mousemove', (e) => {
+      if (isMouseDragging) {
+        let {x, y} = this.calculateMousePos(e);
+        lassoX2 = x;
+        lassoY2 = y;
+      }
     }
   );
 
-  canvas.addEventListener('mousedown', handleMouseClick);
+  canvas.addEventListener('mousedown', (e) => {
+    let {x, y} = this.calculateMousePos(e);
+    lassoX1 = x;
+    lassoY1 = y;
+    lassoX2 = x;
+    lassoY2 = y;
+    isMouseDragging = true;
+  });
+
+  canvas.addEventListener('mouseup', (e) => {
+    isMouseDragging = false;
+  });
+
+  canvas.addEventListener('click', handleMouseClick);
 }
 
 function calculateMousePos(e) {
@@ -82,4 +104,8 @@ function draw() {
 
   playerUnits.forEach(u => u.draw());
   enemyUnits.forEach(u => u.draw());
+
+  if (isMouseDragging) {
+    drawOutlineRectangleByCoordinates(lassoX1, lassoY1, lassoX2, lassoY2, '#22FF00');
+  }
 }

@@ -5,6 +5,13 @@ function drawRectangle(leftX, topY, width, height, drawColor) {
   canvasContext.fillRect(leftX,topY,width,height);
 }
 
+function drawOutlineRectangleByCoordinates(x1, y1, x2, y2, drawColor) {
+  canvasContext.strokeStyle = drawColor;
+  canvasContext.beginPath();
+  canvasContext.rect(x1,y1,x2-x1,y2-y1);
+  canvasContext.stroke();
+}
+
 function drawCircle(centerX, centerY, radius, color) {
   canvasContext.fillStyle = color;
   canvasContext.beginPath();
