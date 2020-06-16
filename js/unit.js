@@ -2,7 +2,7 @@ class Unit {
   PLACEHOLDER_RADIUS = 8;
   SELECTION_BOX_SIZE_HALF = 8;
   SPEED = 2;
-  MAX_RAND_DIST_FROM_TARGET = 100;
+  UNIT_RANK_SPACING = this.PLACEHOLDER_RADIUS*3;
 
   constructor() {
     this.x = 0;
@@ -34,9 +34,13 @@ class Unit {
     return (this.x-x1)*(this.x-x2) < 0 && (this.y-y1)*(this.y-y2) < 0;
   }
 
-  goToNear(nearX, nearY) {
-    this.goToX = nearX + Math.random()*this.MAX_RAND_DIST_FROM_TARGET * Math.cos(Math.random()*Math.PI*2);
-    this.goToY = nearY + Math.random()*this.MAX_RAND_DIST_FROM_TARGET * Math.sin(Math.random()*Math.PI*2);
+  goToNear(nearX, nearY, formationPosition, formationDimention) {
+    const colNum = formationPosition % formationDimention;
+    const rowNum = Math.floor(formationPosition / formationDimention);
+    this.goToX = nearX + colNum*this.UNIT_RANK_SPACING;
+    this.goToY = nearY + rowNum*this.UNIT_RANK_SPACING;
+    //this.goToX = nearX + Math.random()*this.MAX_RAND_DIST_FROM_TARGET * Math.cos(Math.random()*Math.PI*2);
+    //this.goToY = nearY + Math.random()*this.MAX_RAND_DIST_FROM_TARGET * Math.sin(Math.random()*Math.PI*2);
   }
 
   move() {

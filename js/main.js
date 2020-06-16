@@ -2,6 +2,9 @@ let canvas;
 let canvasContext;
 
 const FPS = 30;
+
+const MOUSE_DRAGGING_THRESHOLD = 10;
+
 const PLAYER_START_UNITS = 100;
 const ENEMY_START_UNITS = 50;
 
@@ -46,13 +49,21 @@ window.onload = function() {
   canvas.addEventListener('mouseup', (e) => {
     isMouseDragging = false;
 
-    selectedUnits = [];
+    if (isMouseDraggingThresholdPassed()) {
+      selectedUnits = [];
 
-    playerUnits.forEach((u) => {
-      if (u.isInBox(lassoX1, lassoY1, lassoX2, lassoY2)) {
-        selectedUnits.push(u);
-      }
-    });
+      playerUnits.forEach((u) => {
+        if (u.isInBox(lassoX1, lassoY1, lassoX2, lassoY2)) {
+          selectedUnits.push(u);
+        }
+      });
+    } else {
+      let {x, y} = calculateMousePos(e);
+      let formationSize = Math.floor(Math.sqrt(selectedUnits.length + 2));
+      selectedUnits.forEach((u, i) => u.goToNear(x, y, i, formationSize));
+    
+      //enemyUnits.forEach(u => u.goToNear(x, y));
+    }
   });
 
   canvas.addEventListener('click', handleMouseClick);
@@ -70,11 +81,16 @@ function calculateMousePos(e) {
   }
 }
 
-function handleMouseClick(e) {
-  let {x, y} = calculateMousePos(e);
-  selectedUnits.forEach(u => u.goToNear(x, y));
+function isMouseDraggingThresholdPassed() {
+  let deltaX = lassoX1-lassoX2;
+  let deltaY = lassoY1-lassoY2;
+  let draggingDistance = Math.sqrt(deltaX*deltaX + deltaY*deltaY);
 
-  //enemyUnits.forEach(u => u.goToNear(x, y));
+  return (draggingDistance > MOUSE_DRAGGING_THRESHOLD);
+}
+
+function handleMouseClick(e) {
+
 }
 
 function launchIfReady() {
