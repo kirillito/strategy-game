@@ -2,10 +2,11 @@ let canvas;
 let canvasContext;
 
 const FPS = 30;
-const PLAYER_START_UNITS = 25;
-const ENEMY_START_UNITS = 250;
+const PLAYER_START_UNITS = 100;
+const ENEMY_START_UNITS = 50;
 
 let playerUnits = [];
+let selectedUnits = [];
 let enemyUnits = [];
 
 let lassoX1 = 0,
@@ -44,6 +45,14 @@ window.onload = function() {
 
   canvas.addEventListener('mouseup', (e) => {
     isMouseDragging = false;
+
+    selectedUnits = [];
+
+    playerUnits.forEach((u) => {
+      if (u.isInBox(lassoX1, lassoY1, lassoX2, lassoY2)) {
+        selectedUnits.push(u);
+      }
+    });
   });
 
   canvas.addEventListener('click', handleMouseClick);
@@ -63,9 +72,9 @@ function calculateMousePos(e) {
 
 function handleMouseClick(e) {
   let {x, y} = calculateMousePos(e);
-  playerUnits.forEach(u => u.goToNear(x, y));
+  selectedUnits.forEach(u => u.goToNear(x, y));
 
-  enemyUnits.forEach(u => u.goToNear(x, y));
+  //enemyUnits.forEach(u => u.goToNear(x, y));
 }
 
 function launchIfReady() {
@@ -104,6 +113,8 @@ function draw() {
 
   playerUnits.forEach(u => u.draw());
   enemyUnits.forEach(u => u.draw());
+
+  selectedUnits.forEach(u => u.drawSelectionBox());
 
   if (isMouseDragging) {
     drawOutlineRectangleByCoordinates(lassoX1, lassoY1, lassoX2, lassoY2, '#22FF00');
