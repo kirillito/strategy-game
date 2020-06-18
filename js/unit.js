@@ -3,6 +3,7 @@ class Unit {
   SELECTION_BOX_SIZE_HALF = 8;
   SPEED = 2;
   UNIT_RANK_SPACING = this.PLACEHOLDER_RADIUS*3;
+  UNIT_ATTACK_RANGE = 55;
 
   constructor() {
     this.x = 0;
@@ -10,6 +11,7 @@ class Unit {
     this.angle = 0;
     this.isDead = false;
     this.isPlayer = false;
+    this.target = null;
   }
 
   reset() {
@@ -58,6 +60,26 @@ class Unit {
   }
 
   move() {
+    if (this.target !== null) {
+      if (this.target.isDead) {
+        this.target = null;
+        this.goToX = this.x;
+        this.goToY = this.y;
+      } else if (this.distanceFrom(this.target.x, this.target.y) > this.UNIT_ATTACK_RANGE) {
+        this.goToX = this.target.x;
+        this.goToY = this.target.y;
+      } else {
+        this.target.isDead = true;
+        this.goToX = this.x;
+        this.goToY = this.y;
+      }
+    } else if (!this.isPlayer) {
+      if (Math.random() < 0.1) {
+        this.goToX = this.x - Math.random()*40;
+        this.goToY = this.y - Math.random()*40;
+      }
+    }
+
     if (this.x === this.goToX && this.y === this.goToY) {
       return;
     }
@@ -75,6 +97,10 @@ class Unit {
       this.x = this.goToX;
       this.y = this.goToY;
     }
+  }
+
+  setTarget(newTarget) {
+    this.target = newTarget;
   }
 
   drawSelectionBox() {
