@@ -9,21 +9,29 @@ class Unit {
     this.y = 0;
     this.angle = 0;
     this.isDead = false;
+    this.isPlayer = false;
   }
 
   reset() {
     this.isDead = false;
     
-    this.x = Math.random()*canvas.width;
-    this.y = Math.random()*canvas.height;
+    this.x = Math.random()*canvas.width/2;
+    this.y = Math.random()*canvas.height/2;
     this.angle = 0;
+
+    if (!this.isPlayer) {
+      this.x = canvas.width - this.x;
+      this.y = canvas.height - this.y;
+    }
 
     this.goToX = this.x;
     this.goToY = this.y;
   }
 
-  init(img) {
+  init(img, isPlayer) {
     this.imgSprite = img;
+
+    this.isPlayer = isPlayer;
 
     this.reset();
   }
@@ -32,6 +40,12 @@ class Unit {
     // x is between x1 and x2 if one of the subtraction x-x1 and x-x2 operations gives a negative number
     // check this for both x and y to determine if coordinates are within a box
     return (this.x-x1)*(this.x-x2) < 0 && (this.y-y1)*(this.y-y2) < 0;
+  }
+
+  distanceFrom(fromX, fromY) {
+    let deltaX = fromX - this.x;
+    let deltaY = fromY - this.y;
+    return Math.sqrt(deltaX*deltaX + deltaY*deltaY);
   }
 
   goToNear(nearX, nearY, formationPosition, formationDimention) {

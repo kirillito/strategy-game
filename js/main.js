@@ -4,6 +4,7 @@ let canvasContext;
 const FPS = 30;
 
 const MOUSE_DRAGGING_THRESHOLD = 10;
+const MOUSE_SELECTION_THRESHOLD_DISTANCE = 12;
 
 const PLAYER_START_UNITS = 100;
 const ENEMY_START_UNITS = 50;
@@ -59,10 +60,14 @@ window.onload = function() {
       });
     } else {
       let {x, y} = calculateMousePos(e);
-      let formationSize = Math.floor(Math.sqrt(selectedUnits.length + 2));
-      selectedUnits.forEach((u, i) => u.goToNear(x, y, i, formationSize));
-    
-      //enemyUnits.forEach(u => u.goToNear(x, y));
+      let clickedUnit = getUnitAtCoordinates(x, y);
+
+      if (clickedUnit !== null && !clickedUnit.isPlayer) {
+        console.log(selectedUnits.length + " will attack the enemy!", clickedUnit);
+      } else {
+        let formationSize = Math.floor(Math.sqrt(selectedUnits.length + 2));
+        selectedUnits.forEach((u, i) => u.goToNear(x, y, i, formationSize));
+      }
     }
   });
 
@@ -89,6 +94,29 @@ function isMouseDraggingThresholdPassed() {
   return (draggingDistance > MOUSE_DRAGGING_THRESHOLD);
 }
 
+function getUnitAtCoordinates(x, y) {
+  let closestDistanceToCoordinates = MOUSE_SELECTION_THRESHOLD_DISTANCE;
+  let closestUnit = null;
+
+  playerUnits.forEach(u => {
+    let dist = u.distanceFrom(x, y);
+    if (dist < closestDistanceToCoordinates) {
+      closestUnit = u;
+      closestDistanceToCoordinates = dist;
+    }
+  });
+
+  enemyUnits.forEach(u => {
+    let dist = u.distanceFrom(x, y);
+    if (dist < closestDistanceToCoordinates) {
+      closestUnit = u;
+      closestDistanceToCoordinates = dist;
+    }
+  });
+
+  return closestUnit;
+}
+
 function handleMouseClick(e) {
 
 }
@@ -107,12 +135,12 @@ function startGame() {
 
   for (i=0; i<PLAYER_START_UNITS; i++) {
     let p = new Unit();
-    p.init(playerPic);
+    p.init(playerPic, true);
     playerUnits.push(p);
   }
   for (i=0; i<ENEMY_START_UNITS; i++) {
     let e = new Unit();
-    e.init(enemyPic);
+    e.init(enemyPic, false);
     enemyUnits.push(e);
   }
 }
