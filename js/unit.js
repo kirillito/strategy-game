@@ -3,7 +3,8 @@ class Unit {
   SELECTION_BOX_SIZE_HALF = 8;
   SPEED = 2;
   UNIT_RANK_SPACING = this.PLACEHOLDER_RADIUS*3;
-  UNIT_ATTACK_RANGE = 55;
+  ATTACK_RANGE = 55;
+  AI_ATTACK_INITIATE = this.ATTACK_RANGE+10;
 
   constructor() {
     this.x = 0;
@@ -59,13 +60,13 @@ class Unit {
     //this.goToY = nearY + Math.random()*this.MAX_RAND_DIST_FROM_TARGET * Math.sin(Math.random()*Math.PI*2);
   }
 
-  move() {
+  move(opponentUnits) {
     if (this.target !== null) {
       if (this.target.isDead) {
         this.target = null;
         this.goToX = this.x;
         this.goToY = this.y;
-      } else if (this.distanceFrom(this.target.x, this.target.y) > this.UNIT_ATTACK_RANGE) {
+      } else if (this.distanceFrom(this.target.x, this.target.y) > this.ATTACK_RANGE) {
         this.goToX = this.target.x;
         this.goToY = this.target.y;
       } else {
@@ -73,10 +74,16 @@ class Unit {
         this.goToX = this.x;
         this.goToY = this.y;
       }
-    } else if (!this.isPlayer) {
-      if (Math.random() < 0.1) {
-        this.goToX = this.x - Math.random()*40;
-        this.goToY = this.y - Math.random()*40;
+    } else if (!this.isPlayer && opponentUnits !== null) {
+      if (Math.random() < 0.2) {
+        let nearestOpponentFound = findClosestUnitInRange(this.x, this.y, this.AI_ATTACK_INITIATE, opponentUnits);
+
+        if (nearestOpponentFound != null) {
+          this.target = nearestOpponentFound;
+        } else {
+          this.goToX = this.x - Math.random()*40;
+          this.goToY = this.y - Math.random()*40;
+        }
       }
     }
 

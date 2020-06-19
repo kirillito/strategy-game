@@ -3,12 +3,6 @@ let canvasContext;
 
 const FPS = 30;
 
-const PLAYER_START_UNITS = 100;
-const ENEMY_START_UNITS = 50;
-
-let playerUnits = [];
-let enemyUnits = [];
-
 window.onload = function() {
   canvas = document.getElementById('gameCanvas');
   canvasContext = canvas.getContext('2d');
@@ -40,21 +34,13 @@ function startGame() {
     draw();
   }, 1000/FPS);
 
-  for (i=0; i<PLAYER_START_UNITS; i++) {
-    let p = new Unit();
-    p.init(playerPic, true);
-    playerUnits.push(p);
-  }
-  for (i=0; i<ENEMY_START_UNITS; i++) {
-    let e = new Unit();
-    e.init(enemyPic, false);
-    enemyUnits.push(e);
-  }
+  createTeam(playerUnits, PLAYER_START_UNITS, playerPic, true);
+  createTeam(enemyUnits, ENEMY_START_UNITS, enemyPic, false);
 }
 
 function animate() {
   playerUnits.forEach(u => u.move());
-  enemyUnits.forEach(u => u.move());
+  enemyUnits.forEach(u => u.move(playerUnits));
 }
 
 function draw() {	
@@ -62,12 +48,16 @@ function draw() {
   drawRectangle(0,0,canvas.width,canvas.height,'black');
   //drawImageCenteredAtLocationWithRotation(bgPic, canvas.width/2, canvas.height/2, 0);
 
-  playerUnits.forEach(u => u.draw());
-  enemyUnits.forEach(u => u.draw());
+  allUnits.forEach(u => u.draw());
 
-  selectedUnits.forEach(u => u.drawSelectionBox());
+  selectedUnits.forEach(u => {
+    if (!u.isDead) { 
+      u.drawSelectionBox(); 
+    }
+  });
 
   if (isMouseDragging) {
     drawOutlineRectangleByCoordinates(lassoX1, lassoY1, lassoX2, lassoY2, '#22FF00');
   }
 }
+

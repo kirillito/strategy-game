@@ -30,26 +30,7 @@ function isMouseDraggingThresholdPassed() {
 }
 
 function getUnitAtCoordinates(x, y) {
-  let closestDistanceToCoordinates = MOUSE_SELECTION_THRESHOLD_DISTANCE;
-  let closestUnit = null;
-
-  playerUnits.forEach(u => {
-    let dist = u.distanceFrom(x, y);
-    if (dist < closestDistanceToCoordinates) {
-      closestUnit = u;
-      closestDistanceToCoordinates = dist;
-    }
-  });
-
-  enemyUnits.forEach(u => {
-    let dist = u.distanceFrom(x, y);
-    if (dist < closestDistanceToCoordinates) {
-      closestUnit = u;
-      closestDistanceToCoordinates = dist;
-    }
-  });
-
-  return closestUnit;
+  return findClosestUnitInRange(x, y, MOUSE_SELECTION_THRESHOLD_DISTANCE, allUnits);
 }
 
 function mouseMoveHandler(e) {
