@@ -3,6 +3,8 @@ let canvasContext;
 
 const FPS = 30;
 
+let doUnitCleanup = false;
+
 window.onload = function() {
   canvas = document.getElementById('gameCanvas');
   canvasContext = canvas.getContext('2d');
@@ -41,7 +43,10 @@ function startGame() {
 function animate() {
   playerUnits.forEach(u => u.move());
   enemyUnits.forEach(u => u.move(playerUnits));
-  removeDeadUnits();
+
+  if (doUnitCleanup) {
+    removeDeadUnits();
+  }
 }
 
 function draw() {	

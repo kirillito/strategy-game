@@ -46,4 +46,5 @@ function removeDeadUnits()	{
   removeDeadUnitsFromTeam(playerUnits);
   removeDeadUnitsFromTeam(enemyUnits);
   removeDeadUnitsFromTeam(selectedUnits);
+  doUnitCleanup = false;
 }

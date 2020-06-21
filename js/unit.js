@@ -73,6 +73,7 @@ class Unit {
         this.target.isDead = true;
         this.goToX = this.x;
         this.goToY = this.y;
+        doUnitCleanup = true;
       }
     } else if (!this.isPlayer && opponentUnits !== null) {
       if (Math.random() < 0.2) {
