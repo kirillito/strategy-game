@@ -5,6 +5,7 @@ class Unit {
   UNIT_RANK_SPACING = this.PLACEHOLDER_RADIUS*3;
   ATTACK_RANGE = 55;
   AI_ATTACK_INITIATE = this.ATTACK_RANGE+10;
+  PLAYABLE_AREA_MARGIN = 20;
 
   constructor() {
     this.x = 0;
@@ -76,7 +77,7 @@ class Unit {
         doUnitCleanup = true;
       }
     } else if (!this.isPlayer && opponentUnits !== null) {
-      if (Math.random() < 0.2) {
+      if (Math.random() < 0.01) {
         let nearestOpponentFound = findClosestUnitInRange(this.x, this.y, this.AI_ATTACK_INITIATE, opponentUnits);
 
         if (nearestOpponentFound != null) {
@@ -87,6 +88,8 @@ class Unit {
         }
       }
     }
+
+    this.stayInBattlefield();
 
     if (this.x === this.goToX && this.y === this.goToY) {
       return;
@@ -104,6 +107,20 @@ class Unit {
     } else {
       this.x = this.goToX;
       this.y = this.goToY;
+    }
+  }
+
+  stayInBattlefield() {
+    if (this.goToX < this.PLAYABLE_AREA_MARGIN) {
+      this.goToX = this.PLAYABLE_AREA_MARGIN;
+    } else if (this.goToX > canvas.width - this.PLAYABLE_AREA_MARGIN) {
+      this.goToX = canvas.width - this.PLAYABLE_AREA_MARGIN;
+    }
+
+    if (this.goToY < this.PLAYABLE_AREA_MARGIN) {
+      this.goToY = this.PLAYABLE_AREA_MARGIN;
+    } else if (this.goToY > canvas.height - this.PLAYABLE_AREA_MARGIN) {
+      this.goToY = canvas.height - this.PLAYABLE_AREA_MARGIN;
     }
   }
 

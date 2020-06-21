@@ -48,3 +48,13 @@ function removeDeadUnits()	{
   removeDeadUnitsFromTeam(selectedUnits);
   doUnitCleanup = false;
 }
+
+function checkWinner() {
+  if (playerUnits.length === 0 && enemyUnits.length === 0) {
+    document.getElementById('debugMessage').innerHTML = 'It\'s a draw!';   
+  } else if (playerUnits.length === 0) {
+    document.getElementById('debugMessage').innerHTML = 'Enemy wins!';   
+  } else if (enemyUnits.length === 0) {
+    document.getElementById('debugMessage').innerHTML = 'Player wins!';   
+  }
+}

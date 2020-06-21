@@ -47,6 +47,7 @@ function animate() {
   if (doUnitCleanup) {
     removeDeadUnits();
   }
+  checkWinner();
 }
 
 function draw() {	
