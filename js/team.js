@@ -32,3 +32,18 @@ function findClosestUnitInRange(fromX, fromY, maxRange, unitList) {
 
   return nearestUnit;
 }
+
+function removeDeadUnitsFromTeam(fromArray) {
+  for(var	i=fromArray.length-1;	i>=0;	i--)	{
+    if(fromArray[i].isDead)	{
+      fromArray.splice(i,1);
+    }
+  }
+}
+
+function removeDeadUnits()	{
+  removeDeadUnitsFromTeam(allUnits);
+  removeDeadUnitsFromTeam(playerUnits);
+  removeDeadUnitsFromTeam(enemyUnits);
+  removeDeadUnitsFromTeam(selectedUnits);
+}

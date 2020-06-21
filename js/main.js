@@ -41,6 +41,7 @@ function startGame() {
 function animate() {
   playerUnits.forEach(u => u.move());
   enemyUnits.forEach(u => u.move(playerUnits));
+  removeDeadUnits();
 }
 
 function draw() {	
@@ -51,9 +52,7 @@ function draw() {
   allUnits.forEach(u => u.draw());
 
   selectedUnits.forEach(u => {
-    if (!u.isDead) { 
-      u.drawSelectionBox(); 
-    }
+    u.drawSelectionBox(); 
   });
 
   if (isMouseDragging) {
